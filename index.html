@@ -1,0 +1,1040 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Cartoon Live Clock</title>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+<link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+<style>
+
+/* =========================================
+   RESET
+========================================= */
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+html,
+body {
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+}
+
+body {
+    font-family: "Fredoka", sans-serif;
+    background: #111;
+}
+
+
+/* =========================================
+   BACKGROUND IMAGE
+========================================= */
+
+.background {
+    position: fixed;
+    inset: 0;
+
+    background-image: url("https://i.postimg.cc/8C3753Fj/Untitled.png");
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+
+    z-index: -5;
+
+    animation: backgroundFloat 12s ease-in-out infinite;
+}
+
+@keyframes backgroundFloat {
+
+    0%,
+    100% {
+        transform: scale(1);
+    }
+
+    50% {
+        transform: scale(1.025);
+    }
+
+}
+
+
+/* =========================================
+   DARK OVERLAY
+========================================= */
+
+.overlay {
+    position: fixed;
+    inset: 0;
+
+    background:
+        linear-gradient(
+            rgba(0,0,0,0.20),
+            rgba(0,0,0,0.35)
+        );
+
+    z-index: -4;
+}
+
+
+/* =========================================
+   CARTOON CLOUDS
+========================================= */
+
+.cloud {
+    position: fixed;
+
+    width: 180px;
+    height: 65px;
+
+    background: rgba(255,255,255,0.80);
+
+    border-radius: 100px;
+
+    filter: blur(1px);
+
+    z-index: -2;
+
+    opacity: 0.65;
+}
+
+
+/* Cloud bumps */
+
+.cloud::before,
+.cloud::after {
+    content: "";
+
+    position: absolute;
+
+    background: inherit;
+
+    border-radius: 50%;
+}
+
+.cloud::before {
+    width: 75px;
+    height: 75px;
+
+    left: 30px;
+    bottom: 20px;
+}
+
+.cloud::after {
+    width: 95px;
+    height: 95px;
+
+    right: 25px;
+    bottom: 15px;
+}
+
+
+/* Cloud movement */
+
+.cloud1 {
+    top: 12%;
+    left: -220px;
+
+    animation:
+        cloudMove 35s linear infinite;
+}
+
+.cloud2 {
+    top: 28%;
+    left: -300px;
+
+    transform: scale(.7);
+
+    animation:
+        cloudMove 48s linear infinite;
+
+    animation-delay: 8s;
+}
+
+.cloud3 {
+    top: 70%;
+    left: -250px;
+
+    transform: scale(.55);
+
+    animation:
+        cloudMove 55s linear infinite;
+
+    animation-delay: 15s;
+}
+
+
+@keyframes cloudMove {
+
+    from {
+        transform: translateX(0) scale(1);
+    }
+
+    to {
+        transform: translateX(calc(100vw + 500px)) scale(1);
+    }
+
+}
+
+
+/* =========================================
+   FLOATING CARTOON PARTICLES
+========================================= */
+
+.particle {
+    position: fixed;
+
+    width: 12px;
+    height: 12px;
+
+    border-radius: 50%;
+
+    background: rgba(255,255,255,0.75);
+
+    z-index: -1;
+
+    animation:
+        floatParticle 5s ease-in-out infinite;
+}
+
+.p1 {
+    left: 12%;
+    top: 25%;
+}
+
+.p2 {
+    left: 80%;
+    top: 20%;
+
+    animation-delay: 1s;
+}
+
+.p3 {
+    left: 88%;
+    top: 70%;
+
+    animation-delay: 2s;
+}
+
+.p4 {
+    left: 8%;
+    top: 75%;
+
+    animation-delay: 3s;
+}
+
+@keyframes floatParticle {
+
+    0%,
+    100% {
+        transform:
+            translateY(0)
+            scale(1);
+
+        opacity: .4;
+    }
+
+    50% {
+        transform:
+            translateY(-25px)
+            scale(1.4);
+
+        opacity: 1;
+    }
+
+}
+
+
+/* =========================================
+   MAIN CONTENT
+========================================= */
+
+.clock-wrapper {
+
+    position: relative;
+
+    width: 100%;
+    height: 100%;
+
+    display: flex;
+
+    justify-content: center;
+    align-items: center;
+
+    text-align: center;
+
+}
+
+
+/* =========================================
+   CARTOON CLOCK PANEL
+========================================= */
+
+.clock-panel {
+
+    padding: 45px 70px 50px;
+
+    border-radius: 55px;
+
+    background:
+        rgba(0,0,0,0.25);
+
+    border:
+        4px solid rgba(255,255,255,0.45);
+
+    backdrop-filter: blur(5px);
+
+    box-shadow:
+        0 15px 40px rgba(0,0,0,.35),
+        inset 0 0 30px rgba(255,255,255,.08);
+
+    animation:
+        panelFloat 4s ease-in-out infinite;
+
+}
+
+
+/* =========================================
+   PANEL FLOAT
+========================================= */
+
+@keyframes panelFloat {
+
+    0%,
+    100% {
+        transform:
+            translateY(0)
+            rotate(0deg);
+    }
+
+    50% {
+        transform:
+            translateY(-8px)
+            rotate(.2deg);
+    }
+
+}
+
+
+/* =========================================
+   CLOCK
+========================================= */
+
+#clock {
+
+    display: flex;
+
+    justify-content: center;
+    align-items: center;
+
+    font-size:
+        clamp(65px, 13vw, 250px);
+
+    font-weight: 700;
+
+    letter-spacing: 4px;
+
+    line-height: 1;
+
+    color: #ffffff;
+
+    text-shadow:
+
+        0 5px 0 rgba(0,0,0,.25),
+
+        0 0 10px rgba(255,255,255,.5),
+
+        0 0 35px rgba(255,255,255,.25);
+
+}
+
+
+/* =========================================
+   INDIVIDUAL CHARACTER
+========================================= */
+
+.char {
+
+    position: relative;
+
+    display: inline-flex;
+
+    width: .65em;
+    height: 1em;
+
+    overflow: hidden;
+
+    justify-content: center;
+    align-items: center;
+
+}
+
+
+/* Colon */
+
+.separator {
+
+    width: .35em;
+
+    overflow: visible;
+
+}
+
+
+/* =========================================
+   DIGIT
+========================================= */
+
+.digit {
+
+    position: absolute;
+
+    inset: 0;
+
+    display: flex;
+
+    justify-content: center;
+    align-items: center;
+
+}
+
+
+/* =========================================
+   ROLLING ANIMATION
+========================================= */
+
+.roll-in {
+
+    animation:
+        rollIn .42s
+        cubic-bezier(.25,.8,.25,1);
+
+}
+
+.roll-out {
+
+    animation:
+        rollOut .42s
+        cubic-bezier(.25,.8,.25,1);
+
+}
+
+
+@keyframes rollIn {
+
+    0% {
+
+        transform:
+            translateY(-100%)
+            rotate(-8deg);
+
+        opacity: 0;
+
+    }
+
+    60% {
+
+        opacity: 1;
+
+        transform:
+            translateY(8%)
+            rotate(2deg);
+
+    }
+
+    100% {
+
+        transform:
+            translateY(0)
+            rotate(0);
+
+        opacity: 1;
+
+    }
+
+}
+
+
+@keyframes rollOut {
+
+    0% {
+
+        transform:
+            translateY(0)
+            rotate(0);
+
+        opacity: 1;
+
+    }
+
+    100% {
+
+        transform:
+            translateY(100%)
+            rotate(8deg);
+
+        opacity: 0;
+
+    }
+
+}
+
+
+/* =========================================
+   DAY
+========================================= */
+
+#day {
+
+    margin-top: 30px;
+
+    font-size:
+        clamp(25px, 4vw, 70px);
+
+    font-weight: 600;
+
+    letter-spacing: 10px;
+
+    color: #ffffff;
+
+    text-shadow:
+        0 4px 0 rgba(0,0,0,.25),
+        0 0 15px rgba(255,255,255,.3);
+
+}
+
+
+/* Day animation */
+
+.day-animation {
+
+    animation:
+        cartoonDay .7s
+        cubic-bezier(.22,1,.36,1);
+
+}
+
+@keyframes cartoonDay {
+
+    0% {
+
+        transform:
+            translateY(-35px)
+            scale(.7)
+            rotate(-5deg);
+
+        opacity: 0;
+
+    }
+
+    65% {
+
+        transform:
+            translateY(5px)
+            scale(1.08)
+            rotate(2deg);
+
+        opacity: 1;
+
+    }
+
+    100% {
+
+        transform:
+            translateY(0)
+            scale(1)
+            rotate(0);
+
+        opacity: 1;
+
+    }
+
+}
+
+
+/* =========================================
+   DATE
+========================================= */
+
+#date {
+
+    margin-top: 15px;
+
+    display: flex;
+
+    justify-content: center;
+
+    font-size:
+        clamp(20px, 3vw, 55px);
+
+    font-weight: 500;
+
+    letter-spacing: 5px;
+
+    color: rgba(255,255,255,.9);
+
+    text-shadow:
+        0 3px 0 rgba(0,0,0,.25);
+
+}
+
+
+/* =========================================
+   DATE CHARACTER
+========================================= */
+
+.date-char {
+
+    display: inline-block;
+
+    min-width: .5em;
+
+}
+
+
+/* Date change */
+
+.date-animation {
+
+    animation:
+        cartoonDate .45s
+        cubic-bezier(.22,1,.36,1);
+
+}
+
+@keyframes cartoonDate {
+
+    0% {
+
+        transform:
+            translateY(-30px)
+            scale(.6)
+            rotate(-8deg);
+
+        opacity: 0;
+
+    }
+
+    70% {
+
+        transform:
+            translateY(3px)
+            scale(1.08)
+            rotate(2deg);
+
+        opacity: 1;
+
+    }
+
+    100% {
+
+        transform:
+            translateY(0)
+            scale(1)
+            rotate(0);
+
+        opacity: 1;
+
+    }
+
+}
+
+</style>
+</head>
+
+
+<body>
+
+
+<!-- =====================================
+     BACKGROUND
+===================================== -->
+
+<div class="background"></div>
+
+<div class="overlay"></div>
+
+
+<!-- =====================================
+     CARTOON CLOUDS
+===================================== -->
+
+<div class="cloud cloud1"></div>
+<div class="cloud cloud2"></div>
+<div class="cloud cloud3"></div>
+
+
+<!-- =====================================
+     FLOATING PARTICLES
+===================================== -->
+
+<div class="particle p1"></div>
+<div class="particle p2"></div>
+<div class="particle p3"></div>
+<div class="particle p4"></div>
+
+
+<!-- =====================================
+     CLOCK
+===================================== -->
+
+<div class="clock-wrapper">
+
+    <div class="clock-panel">
+
+        <div id="clock"></div>
+
+        <div id="day"></div>
+
+        <div id="date"></div>
+
+    </div>
+
+</div>
+
+
+<script>
+
+/* =========================================
+   ELEMENTS
+========================================= */
+
+const clock =
+    document.getElementById("clock");
+
+const day =
+    document.getElementById("day");
+
+const date =
+    document.getElementById("date");
+
+
+let previousTime = "";
+let previousDay = "";
+let previousDate = "";
+
+
+/* =========================================
+   TIME
+========================================= */
+
+function updateTime(newTime) {
+
+    if (!previousTime) {
+
+        clock.innerHTML = "";
+
+        [...newTime].forEach(char => {
+
+            const slot =
+                document.createElement("span");
+
+            slot.className =
+                char === ":"
+                ? "char separator"
+                : "char";
+
+
+            const digit =
+                document.createElement("span");
+
+            digit.className = "digit";
+
+            digit.textContent = char;
+
+            slot.appendChild(digit);
+
+            clock.appendChild(slot);
+
+        });
+
+        previousTime = newTime;
+
+        return;
+    }
+
+
+    [...newTime].forEach((newChar, index) => {
+
+        const oldChar =
+            previousTime[index];
+
+
+        /* Don't touch unchanged characters */
+
+        if (newChar === oldChar) {
+            return;
+        }
+
+
+        const slot =
+            clock.children[index];
+
+        if (!slot) return;
+
+
+        /* Separator */
+
+        if (newChar === ":") {
+
+            slot.innerHTML = "";
+
+            const separator =
+                document.createElement("span");
+
+            separator.className = "digit";
+
+            separator.textContent = ":";
+
+            slot.appendChild(separator);
+
+            return;
+        }
+
+
+        /* Old digit */
+
+        const oldDigit =
+            slot.querySelector(".digit");
+
+
+        if (oldDigit) {
+
+            oldDigit.classList.add("roll-out");
+
+            setTimeout(() => {
+
+                if (oldDigit.parentNode) {
+                    oldDigit.remove();
+                }
+
+            }, 420);
+
+        }
+
+
+        /* New digit */
+
+        const newDigit =
+            document.createElement("span");
+
+        newDigit.className =
+            "digit roll-in";
+
+        newDigit.textContent =
+            newChar;
+
+        slot.appendChild(newDigit);
+
+    });
+
+
+    previousTime = newTime;
+
+}
+
+
+/* =========================================
+   DAY
+========================================= */
+
+function updateDay(newDay) {
+
+    if (!previousDay) {
+
+        day.textContent = newDay;
+
+        previousDay = newDay;
+
+        return;
+    }
+
+
+    if (newDay !== previousDay) {
+
+        day.classList.remove(
+            "day-animation"
+        );
+
+        void day.offsetWidth;
+
+        day.textContent = newDay;
+
+        day.classList.add(
+            "day-animation"
+        );
+
+        previousDay = newDay;
+
+    }
+
+}
+
+
+/* =========================================
+   DATE
+========================================= */
+
+function updateDate(newDate) {
+
+    if (!previousDate) {
+
+        date.innerHTML = "";
+
+        [...newDate].forEach(char => {
+
+            const span =
+                document.createElement("span");
+
+            span.className =
+                "date-char";
+
+            span.textContent =
+                char;
+
+            date.appendChild(span);
+
+        });
+
+        previousDate = newDate;
+
+        return;
+    }
+
+
+    [...newDate].forEach((newChar, index) => {
+
+        if (newChar === previousDate[index]) {
+            return;
+        }
+
+
+        const span =
+            date.children[index];
+
+        if (!span) return;
+
+
+        span.textContent =
+            newChar;
+
+
+        span.classList.remove(
+            "date-animation"
+        );
+
+
+        void span.offsetWidth;
+
+
+        span.classList.add(
+            "date-animation"
+        );
+
+    });
+
+
+    previousDate = newDate;
+
+}
+
+
+/* =========================================
+   MAIN CLOCK
+========================================= */
+
+function updateClock() {
+
+    const now = new Date();
+
+
+    /* TIME */
+
+    const hours =
+        String(now.getHours())
+        .padStart(2, "0");
+
+    const minutes =
+        String(now.getMinutes())
+        .padStart(2, "0");
+
+    const seconds =
+        String(now.getSeconds())
+        .padStart(2, "0");
+
+
+    const currentTime =
+        `${hours}:${minutes}:${seconds}`;
+
+
+    /* DAY */
+
+    const days = [
+        "SUNDAY",
+        "MONDAY",
+        "TUESDAY",
+        "WEDNESDAY",
+        "THURSDAY",
+        "FRIDAY",
+        "SATURDAY"
+    ];
+
+
+    const currentDay =
+        days[now.getDay()];
+
+
+    /* DATE */
+
+    const months = [
+        "JANUARY",
+        "FEBRUARY",
+        "MARCH",
+        "APRIL",
+        "MAY",
+        "JUNE",
+        "JULY",
+        "AUGUST",
+        "SEPTEMBER",
+        "OCTOBER",
+        "NOVEMBER",
+        "DECEMBER"
+    ];
+
+
+    const currentDate =
+        `${String(now.getDate()).padStart(2, "0")} ${months[now.getMonth()]} ${now.getFullYear()}`;
+
+
+    /* UPDATE */
+
+    updateTime(currentTime);
+
+    updateDay(currentDay);
+
+    updateDate(currentDate);
+
+}
+
+
+/* =========================================
+   START
+========================================= */
+
+updateClock();
+
+setInterval(updateClock, 1000);
+
+</script>
+
+</body>
+</html>
